@@ -21,6 +21,7 @@ add_library(ClassFile "src/Parser.cpp"
                       "src/Serializer.cpp" 
                       "src/Instruction.cpp" 
                       "src/ConstantPool.cpp" 
+                      "src/ClassFile.cpp" 
                       "src/Attribute.cpp")
 
 target_include_directories(ClassFile PRIVATE "src")
