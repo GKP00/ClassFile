@@ -33,25 +33,6 @@ void PrintConstInfo(size_t i, const ClassFile::ConstantPool& cp)
   std::cout << '\n';
 }
 
-std::vector<std::string_view> GetMethodFlags(const ClassFile::FieldMethodInfo& method)
-{
-  std::vector<std::string_view> attributes;
-
-  if(method.AccessFlags & 0x0001) attributes.push_back("PUBLIC");
-  if(method.AccessFlags & 0x0002) attributes.push_back("PRIVATE");
-  if(method.AccessFlags & 0x0004) attributes.push_back("PROTECTED");
-  if(method.AccessFlags & 0x0008) attributes.push_back("STATIC");
-  if(method.AccessFlags & 0x0010) attributes.push_back("FINAL");
-  if(method.AccessFlags & 0x0020) attributes.push_back("SYNCHRONIZED");
-  if(method.AccessFlags & 0x0040) attributes.push_back("BRIDGE");
-  if(method.AccessFlags & 0x0080) attributes.push_back("VARARGS");
-  if(method.AccessFlags & 0x0100) attributes.push_back("NATIVE");
-  if(method.AccessFlags & 0x0400) attributes.push_back("ABSTRACT");
-  if(method.AccessFlags & 0x0800) attributes.push_back("STRICT");
-  if(method.AccessFlags & 0x1000) attributes.push_back("SYNTHETIC");
-
-  return attributes;
-}
 
 std::vector<std::string_view> GetClassFlags(ClassFile::U16 flags)
 {
@@ -171,7 +152,7 @@ void PrintMethods(const ClassFile::ClassFile& cf)
     std::cout << cf.ConstPool.LookupString(method.NameIndex).Get();
     std::cout << " [";
 
-    auto flagStrings = GetMethodFlags(method);
+    auto flagStrings = method.FlagsToStrs();
 
     for(auto i = 0u; i < flagStrings.size(); i++)
     {
@@ -223,7 +204,7 @@ void PrintFields(const ClassFile::ClassFile& cf)
     std::cout << "(";
 
     //                 same struct, same flags
-    auto flagStrings = GetMethodFlags(field);
+    auto flagStrings = field.FlagsToStrs();
 
     for(auto i = 0u; i < flagStrings.size(); i++)
     {
