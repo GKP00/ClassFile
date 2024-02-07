@@ -64,4 +64,5 @@ int main(int argc, char** argv)
 
   std::cout << "Serialized class in ~" << std::chrono::duration_cast<std::chrono::nanoseconds>(after-before).count() / 1000000.0f << " milliseconds\n";
 
+  return 0;
 }
