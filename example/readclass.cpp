@@ -33,23 +33,6 @@ void PrintConstInfo(size_t i, const ClassFile::ConstantPool& cp)
   std::cout << '\n';
 }
 
-
-std::vector<std::string_view> GetClassFlags(ClassFile::U16 flags)
-{
-  std::vector<std::string_view> attributes;
-
-  if(flags & 0x0001) attributes.push_back("PUBLIC");
-  if(flags & 0x0010) attributes.push_back("FINAL");
-  if(flags & 0x0020) attributes.push_back("SUPER");
-  if(flags & 0x0200) attributes.push_back("INTERFACE");
-  if(flags & 0x0400) attributes.push_back("ABSTRACT");
-  if(flags & 0x1000) attributes.push_back("SYNTHETIC");
-  if(flags & 0x2000) attributes.push_back("ANNOTATION");
-  if(flags & 0x4000) attributes.push_back("ENUM");
-
-  return attributes;
-}
-
 std::string_view GetOperandTypeName(ClassFile::Instruction::OperandType type)
 {
   switch(type)
@@ -119,7 +102,7 @@ void PrintFlags(const ClassFile::ClassFile& cf)
   std::cout << "Access flags: 0x" << std::uppercase << std::hex
     << cf.AccessFlags << std::nouppercase << std::dec;
 
-  auto flagStrings = GetClassFlags(cf.AccessFlags);
+  auto flagStrings = cf.FlagsToStrs();
 
   if(flagStrings.size() == 0)
   {
