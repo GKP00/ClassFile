@@ -1,6 +1,7 @@
 #include "ClassFile/ClassFile.hpp"
 
-using namespace ClassFile;
+namespace ClassFile
+{
 
 const std::unordered_map<FieldMethodInfo::AccessFlag, std::string_view> 
 FieldMethodInfo::FlagStrMap = 
@@ -45,3 +46,4 @@ std::vector<std::string_view> FieldMethodInfo::FlagsToStrs() const
 }
 
 
+} //namespace: ClassFile
