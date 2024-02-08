@@ -50,4 +50,4 @@ struct ClassFile
   std::vector< std::unique_ptr<AttributeInfo> > Attributes;
 };
 
-} //namespace ClassFile
+} //namespace: ClassFile
