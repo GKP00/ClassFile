@@ -48,6 +48,22 @@ struct ClassFile
   std::vector<FieldMethodInfo> Fields;
   std::vector<FieldMethodInfo> Methods;
   std::vector< std::unique_ptr<AttributeInfo> > Attributes;
+
+  enum class AccessFlag : U16
+  {
+    PUBLIC     = 0x0001,
+    FINAL      = 0x0010,
+    SUPER      = 0x0020,
+    INTERFACE  = 0x0200,
+    ABSTRACT   = 0x0400,
+    SYNTHETIC  = 0x1000,
+    ANNOTATION = 0x2000,
+    ENUM       = 0x4000,
+  };
+
+  static const std::unordered_map<AccessFlag, std::string_view> FlagStrMap;
+  static ErrorOr<std::string_view> FlagToStr(U16 flag);
+  std::vector<std::string_view> FlagsToStrs() const;
 };
 
 } //namespace: ClassFile
