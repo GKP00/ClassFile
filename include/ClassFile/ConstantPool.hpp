@@ -140,6 +140,8 @@ struct InvokeDynamicInfo : public CPInfo
 class ConstantPool
 {
   public:
+    ConstantPool();
+
     void Reserve(U16 n);
     void Add(std::unique_ptr<CPInfo>&& info);
     void Add(CPInfo* info);
@@ -166,7 +168,6 @@ class ConstantPool
       return cast_ptr;
     }
 
-    //if index is OOB then nullptr is returned
     CPInfo* operator[](U16 index);
     const CPInfo* operator[](U16 index) const;
 

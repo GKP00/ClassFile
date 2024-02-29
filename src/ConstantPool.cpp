@@ -47,6 +47,11 @@ CPInfo::Type CPInfo::GetType() const
   return this->m_type;
 }
 
+ConstantPool::ConstantPool()
+{
+  m_pool.emplace_back( std::unique_ptr<CPInfo>(nullptr) );
+}
+
 void ConstantPool::Reserve(U16 n) 
 {
   m_pool.reserve(n);
@@ -183,19 +188,11 @@ U16 ConstantPool::GetCount() const
 
 CPInfo* ConstantPool::operator[](U16 index) 
 {
-  --index;
-  if(index > this->GetSize())
-    return nullptr;
-
   return m_pool[index].get();
 }
 
 const CPInfo* ConstantPool::operator[](U16 index) const
 {
-  --index;
-  if(index > this->GetSize())
-    return nullptr;
-
   return m_pool[index].get();
 }
 
