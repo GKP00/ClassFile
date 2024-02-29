@@ -19,7 +19,6 @@ static bool PrintDetails{false};
 void PrintConstInfo(size_t i, const ClassFile::ConstantPool& cp)
 {
   std::cout << "ConstPool[" << i << "] = " << cp[i]->GetName();
-  using Type = ClassFile::CPInfo::Type;
 
   auto errOrString = cp.LookupString(i);
   auto errOrDesc   = cp.LookupDescriptor(i);
