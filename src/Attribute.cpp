@@ -13,9 +13,10 @@ using namespace std::literals;
 
 static std::map<AttributeInfo::Type, std::string_view> typeNames =
 {
-  {AttributeInfo::Type::ConstantValue, "ConstantValue"sv},
-  {AttributeInfo::Type::Code,          "Code"sv},
-  {AttributeInfo::Type::SourceFile,    "SourceFile"sv},
+  {AttributeInfo::Type::ConstantValue,   "ConstantValue"sv},
+  {AttributeInfo::Type::Code,            "Code"sv},
+  {AttributeInfo::Type::SourceFile,      "SourceFile"sv},
+  {AttributeInfo::Type::LineNumberTable, "LineNumberTable"sv},
 
   {AttributeInfo::Type::Raw, "_Raw"sv}
 };

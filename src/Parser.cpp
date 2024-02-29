@@ -349,6 +349,23 @@ static ErrorOr<void> readAttribute(std::istream& stream,
   return {};
 }
 
+static ErrorOr<void> readAttribute(std::istream& stream, 
+    const ConstantPool& constPool, LineNumberTableAttribute& attr)
+{
+  U16 tableLen;
+  TRY(Read<BigEndian>(stream, tableLen));
+
+  for(auto i = 0u; i < tableLen; i++)
+  {
+    U16 pc, line;
+    TRY(Read<BigEndian>(stream, pc));
+    TRY(Read<BigEndian>(stream, line));
+    attr.LineNumberMap.push_back({pc, line});
+  }
+
+  return {};
+}
+
 template <typename AttributeT>
 static ErrorOr< std::unique_ptr<AttributeInfo> > parseAttributeT(
     std::istream& stream, const ConstantPool& constPool, U16 nameIndex, U32 len)
@@ -400,6 +417,8 @@ ErrorOr< std::unique_ptr<AttributeInfo> > Parser::ParseAttribute(
       return parseAttributeT<CodeAttribute>(stream, constPool, nameIndex, len);
     case AttributeInfo::Type::SourceFile: 
       return parseAttributeT<SourceFileAttribute>(stream, constPool, nameIndex, len);
+    case AttributeInfo::Type::LineNumberTable: 
+      return parseAttributeT<LineNumberTableAttribute>(stream, constPool, nameIndex, len);
 
     default: break;
   }

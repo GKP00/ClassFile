@@ -19,7 +19,6 @@ ErrorOr<void> Serializer::SerializeClassFile(std::ostream& stream, const ClassFi
                                cf.SuperClass,
                                static_cast<U16>(cf.Interfaces.size())));
 
-
   for(U16 interface : cf.Interfaces)
     TRY(Write<BigEndian>(stream, interface));
 
@@ -57,6 +56,7 @@ ErrorOr<void> Serializer::SerializeConstantPool(std::ostream& stream, const Cons
 
     TRY(Serializer::SerializeConstant(stream, *ptr));
   }
+
 
   return {};
 }
@@ -257,6 +257,19 @@ static ErrorOr<void> writeAttr(std::ostream& stream, const SourceFileAttribute& 
   return {};
 }
 
+static ErrorOr<void> writeAttr(std::ostream& stream, const LineNumberTableAttribute& attr)
+{
+  TRY( Write<BigEndian>(stream, static_cast<U16>(attr.LineNumberMap.size())) );
+
+  for(auto mapping : attr.LineNumberMap)
+  {
+    TRY( Write<BigEndian>(stream, mapping.PC) );
+    TRY( Write<BigEndian>(stream, mapping.LineNumber) );
+  }
+
+  return {};
+}
+
 template <typename T>
 static ErrorOr<void> writeAttrT(std::ostream& stream, const AttributeInfo& info)
 {
@@ -272,6 +285,7 @@ ErrorOr<void> Serializer::SerializeAttribute(std::ostream& stream, const Attribu
     case AttributeInfo::Type::ConstantValue: return writeAttrT<ConstantValueAttribute>(stream, info);
     case AttributeInfo::Type::Code:          return writeAttrT<CodeAttribute>(stream, info);
     case AttributeInfo::Type::SourceFile:    return writeAttrT<SourceFileAttribute>(stream, info);
+    case AttributeInfo::Type::LineNumberTable:    return writeAttrT<LineNumberTableAttribute>(stream, info);
 
     case AttributeInfo::Type::Raw:           return writeAttrT<RawAttribute>(stream, info);
   }

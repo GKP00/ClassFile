@@ -26,7 +26,7 @@ struct AttributeInfo
       //Signature,
       SourceFile,
       //SourceDebugExtention,
-      //LineNumberTable,
+      LineNumberTable,
       //LocalVariableTable,
       //LocalVariableTypeTable,
       //Deprecated,
@@ -128,6 +128,24 @@ struct SourceFileAttribute : public AttributeInfo
   U32 GetLength() const override { return 2;  }
 
   U16 SourceFileIndex;
+};
+
+struct LineNumberTableAttribute : public AttributeInfo
+{
+  LineNumberTableAttribute() : AttributeInfo(Type::LineNumberTable) {}
+
+  U32 GetLength() const override 
+  {
+    return sizeof(U16) //line_number_table_length field
+      + (LineNumberMap.size() * (sizeof(U16) + sizeof(U16))); 
+  }
+
+  struct LineMapping
+  {
+    U16 PC, LineNumber;
+  };
+
+  std::vector<LineMapping> LineNumberMap;
 };
 
 
