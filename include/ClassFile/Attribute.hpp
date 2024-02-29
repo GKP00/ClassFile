@@ -19,8 +19,23 @@ struct AttributeInfo
     {
       ConstantValue,
       Code,
-
+      //StackMapTable,
+      //Exceptions,
+      //InnerClasses,
+      //Synthetic,
+      //Signature,
       SourceFile,
+      //SourceDebugExtention,
+      //LineNumberTable,
+      //LocalVariableTable,
+      //LocalVariableTypeTable,
+      //Deprecated,
+      //RuntimeVisibleAnnotations,
+      //RuntimeInvisibleAnnotations,
+      //RuntimeVisibleParameterAnnotations,
+      //RuntimeInvisibleParameterAnnotations,
+      //AnnotationDefault,
+      //BootstrapMethods,
   
       Raw, //Non standard 
     };
