@@ -5,19 +5,18 @@
 
 namespace ClassFile
 {
-
-class Serializer
+namespace Serializer
 {
-  public:
-    static ErrorOr<void> SerializeClassFile(std::ostream&, const ClassFile&);
-    static ErrorOr<void> SerializeConstantPool(std::ostream&, const ConstantPool&);
-    static ErrorOr<void> SerializeConstant(std::ostream&, const CPInfo&);
 
-    static ErrorOr<void> SerializeFieldMethod(std::ostream&, const FieldMethodInfo&);
-    static ErrorOr<void> SerializeAttribute(std::ostream&, const AttributeInfo&);
+ErrorOr<void> SerializeClassFile(std::ostream&, const ClassFile&);
+ErrorOr<void> SerializeConstantPool(std::ostream&, const ConstantPool&);
+ErrorOr<void> SerializeConstant(std::ostream&, const CPInfo&);
 
-    static ErrorOr<void> SerializeInstruction(std::ostream&, const Instruction&);
-};
+ErrorOr<void> SerializeFieldMethod(std::ostream&, const FieldMethodInfo&);
+ErrorOr<void> SerializeAttribute(std::ostream&, const AttributeInfo&);
 
+ErrorOr<void> SerializeInstruction(std::ostream&, const Instruction&);
+
+} //namespace Serializer
 } //namespace ClassFile
 
