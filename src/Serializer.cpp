@@ -211,9 +211,9 @@ static ErrorOr<void> writeAttr(std::ostream& stream, const RawAttribute& attr)
   return {};
 }
 
-static ErrorOr<void> writeAttr(std::ostream& stream, const SourceFileAttribute& attr)
+static ErrorOr<void> writeAttr(std::ostream& stream, const ConstantValueAttribute& attr)
 {
-  TRY( Write<BigEndian>(stream, attr.SourceFileIndex) );
+  TRY( Write<BigEndian>(stream, attr.Index) );
   return {};
 }
 
@@ -251,9 +251,9 @@ static ErrorOr<void> writeAttr(std::ostream& stream, const CodeAttribute& attr)
   return {};
 }
 
-static ErrorOr<void> writeAttr(std::ostream& stream, const ConstantValueAttribute& attr)
+static ErrorOr<void> writeAttr(std::ostream& stream, const SourceFileAttribute& attr)
 {
-  TRY( Write<BigEndian>(stream, attr.Index) );
+  TRY( Write<BigEndian>(stream, attr.SourceFileIndex) );
   return {};
 }
 

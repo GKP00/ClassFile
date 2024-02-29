@@ -77,14 +77,6 @@ struct ConstantValueAttribute : public AttributeInfo
   U16 Index;
 };
 
-struct SourceFileAttribute : public AttributeInfo
-{
-  SourceFileAttribute() : AttributeInfo(Type::SourceFile) {}
-  U32 GetLength() const override { return 2;  }
-
-  U16 SourceFileIndex;
-};
-
 struct CodeAttribute : public AttributeInfo
 {
   CodeAttribute() : AttributeInfo(Type::Code) {}
@@ -128,6 +120,14 @@ struct CodeAttribute : public AttributeInfo
     return len;
   }
 
+};
+
+struct SourceFileAttribute : public AttributeInfo
+{
+  SourceFileAttribute() : AttributeInfo(Type::SourceFile) {}
+  U32 GetLength() const override { return 2;  }
+
+  U16 SourceFileIndex;
 };
 
 

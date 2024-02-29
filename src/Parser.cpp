@@ -277,13 +277,6 @@ static ErrorOr<void> readAttribute(std::istream& stream,
 }
 
 static ErrorOr<void> readAttribute(std::istream& stream, 
-    const ConstantPool& constPool, SourceFileAttribute& attr)
-{
-  TRY(Read<BigEndian>(stream, attr.SourceFileIndex));
-  return {};
-}
-
-static ErrorOr<void> readAttribute(std::istream& stream, 
     const ConstantPool& constPool, CodeAttribute& attr)
 {
   U32 codeLen;
@@ -349,6 +342,13 @@ static ErrorOr<void> readAttribute(std::istream& stream,
   return {};
 }
 
+static ErrorOr<void> readAttribute(std::istream& stream, 
+    const ConstantPool& constPool, SourceFileAttribute& attr)
+{
+  TRY(Read<BigEndian>(stream, attr.SourceFileIndex));
+  return {};
+}
+
 template <typename AttributeT>
 static ErrorOr< std::unique_ptr<AttributeInfo> > parseAttributeT(
     std::istream& stream, const ConstantPool& constPool, U16 nameIndex, U32 len)
@@ -396,10 +396,10 @@ ErrorOr< std::unique_ptr<AttributeInfo> > Parser::ParseAttribute(
   {
     case AttributeInfo::Type::ConstantValue: 
       return parseAttributeT<ConstantValueAttribute>(stream, constPool, nameIndex, len);
-    case AttributeInfo::Type::SourceFile: 
-      return parseAttributeT<SourceFileAttribute>(stream, constPool, nameIndex, len);
     case AttributeInfo::Type::Code: 
       return parseAttributeT<CodeAttribute>(stream, constPool, nameIndex, len);
+    case AttributeInfo::Type::SourceFile: 
+      return parseAttributeT<SourceFileAttribute>(stream, constPool, nameIndex, len);
 
     default: break;
   }
