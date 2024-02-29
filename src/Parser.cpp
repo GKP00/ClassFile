@@ -400,6 +400,8 @@ ErrorOr< std::unique_ptr<AttributeInfo> > Parser::ParseAttribute(
       return parseAttributeT<SourceFileAttribute>(stream, constPool, nameIndex, len);
     case AttributeInfo::Type::Code: 
       return parseAttributeT<CodeAttribute>(stream, constPool, nameIndex, len);
+
+    default: break;
   }
 
   //TODO: remove raws once everything is implemented, or WARN or something idk

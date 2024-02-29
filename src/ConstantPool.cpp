@@ -99,6 +99,8 @@ ErrorOr<std::string_view> ConstantPool::LookupString(U16 index) const
 
     case CPInfo::Type::InvokeDynamic:
       return getNameByNameAndTypeIndex<InvokeDynamicInfo>(index, *this);
+
+    default: break;
   }
 
   return Error{fmt::format("ConstantPool: Failed to lookup name "
@@ -150,6 +152,8 @@ ErrorOr<std::string_view> ConstantPool::LookupDescriptor(U16 index) const
 
     case CPInfo::Type::InvokeDynamic:
       return getDescriptorByNameAndTypeIndex<InvokeDynamicInfo>(index, *this);
+
+    default: break;
   }
 
   return Error{fmt::format("ConstantPool: Failed to lookup descriptor "
