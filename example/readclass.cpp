@@ -149,23 +149,38 @@ void PrintMethods(const ClassFile::ClassFile& cf)
     if(!PrintDetails)
       continue;
 
-    for(size_t i = 0; i < method.Attributes.size(); i++)
+    auto codeItr = std::find_if(method.Attributes.begin(), method.Attributes.end(), 
+        [](const auto& pAttr) { return pAttr->GetType() == ClassFile::AttributeInfo::Type::Code;});
+
+
+    const auto* pCodeAttr = 
+      codeItr == method.Attributes.end() ? nullptr : 
+      static_cast<const ClassFile::CodeAttribute*>((*codeItr).get());
+
+
+    if(pCodeAttr)
     {
-      if(method.Attributes[i] == nullptr)
-        throw std::runtime_error{"encountered nullptr attribute."};
+      std::cout << " :\n";
 
-      if(method.Attributes[i]->GetType() != ClassFile::AttributeInfo::Type::Code)
-        continue;
-
-      const auto& codeAttr = static_cast<const ClassFile::CodeAttribute&>(*method.Attributes[i]);
-
-      for(size_t j = 0; j < codeAttr.Code.size(); j++)
+      for(const auto& instr : pCodeAttr->Code)
       {
-        if(j == 0)
-          std::cout << ":\n";
+        std::cout << "   ";
+        PrintInstrInfo(instr);
+      }
 
-        std::cout << "    ";
-        PrintInstrInfo(codeAttr.Code[j]);
+      //check if a line number table attribute exists in the code attribute
+      auto lineTableItr = std::find_if(pCodeAttr->Attributes.begin(), pCodeAttr->Attributes.end(), 
+          [](const auto& pAttr) { return pAttr->GetType() == ClassFile::AttributeInfo::Type::LineNumberTable;});
+
+      const auto* pLineTableAttr = 
+        lineTableItr == pCodeAttr->Attributes.end() ? nullptr :
+        static_cast<const ClassFile::LineNumberTableAttribute*>((*lineTableItr).get());
+
+      if(pLineTableAttr)
+      {
+        std::cout << "  Line number table:\n";
+        for(auto mapping : pLineTableAttr->LineNumberMap)
+          std::cout << "    PC{" << mapping.PC << "}, Line{" << mapping.LineNumber << "}\n";
       }
 
     }
