@@ -168,6 +168,27 @@ void PrintMethods(const ClassFile::ClassFile& cf)
         PrintInstrInfo(instr);
       }
 
+      //print exception table
+      if(pCodeAttr->ExceptionTable.size() > 0)
+        std::cout<< "  Exception table:\n";
+
+      for(const auto& itr : pCodeAttr->ExceptionTable)
+      {
+        std::cout << "   " 
+          << "StartPC{" << itr.StartPC << "}, "
+          << "EndPC{" << itr.EndPC << "}, "
+          << "HandlerPC{" << itr.HandlerPC<< "}, "
+          << "CatchType{";
+
+        if(itr.CatchType)
+          std::cout << cf.ConstPool.LookupString(itr.CatchType).Get();
+        else
+          std::cout << itr.CatchType;
+          
+        std::cout << "}\n";
+      }
+
+
       //check if a line number table attribute exists in the code attribute
       auto lineTableItr = std::find_if(pCodeAttr->Attributes.begin(), pCodeAttr->Attributes.end(), 
           [](const auto& pAttr) { return pAttr->GetType() == ClassFile::AttributeInfo::Type::LineNumberTable;});
