@@ -42,10 +42,9 @@ ErrorOr<void> Serializer::SerializeClassFile(std::ostream& stream, const ClassFi
 
 ErrorOr<void> Serializer::SerializeConstantPool(std::ostream& stream, const ConstantPool& cp)
 {
-
   TRY(Write<BigEndian>(stream, cp.GetCount()));
 
-  for(auto i = 0; i < cp.GetCount(); i++)
+  for(auto i = 1; i < cp.GetCount(); i++)
   {
     const CPInfo* ptr = cp[i];
 

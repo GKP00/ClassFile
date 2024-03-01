@@ -178,7 +178,8 @@ void ConstantPool::Add(CPInfo* info)
 
 U16 ConstantPool::GetSize() const
 {
-  return static_cast<U16>(m_pool.size());
+  assert(m_pool.size() > 1);
+  return static_cast<U16>(m_pool.size()-1);
 }
 
 U16 ConstantPool::GetCount() const
