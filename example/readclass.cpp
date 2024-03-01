@@ -152,7 +152,7 @@ void PrintMethods(const ClassFile::ClassFile& cf)
     for(size_t i = 0; i < method.Attributes.size(); i++)
     {
       if(method.Attributes[i] == nullptr)
-        continue;
+        throw std::runtime_error{"encountered nullptr attribute."};
 
       if(method.Attributes[i]->GetType() != ClassFile::AttributeInfo::Type::Code)
         continue;
