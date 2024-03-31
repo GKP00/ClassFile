@@ -13,6 +13,7 @@
 #include <ClassFile/ClassFile.hpp>
 #include <ClassFile/Parser.hpp>
 #include <ClassFile/Serializer.hpp>
+#include <ClassFile/Misc.hpp>
 
 static bool PrintDetails{false};
 
@@ -129,23 +130,42 @@ void PrintMethods(const ClassFile::ClassFile& cf)
   for(const auto& method : cf.Methods)
   {
     std::cout << "\n  ";
-    std::cout << cf.ConstPool.LookupString(method.DescriptorIndex).Get();
-    std::cout << " - ";
-    std::cout << cf.ConstPool.LookupString(method.NameIndex).Get();
-    std::cout << " [";
 
-    auto flagStrings = method.FlagsToStrs();
-
-    for(auto i = 0u; i < flagStrings.size(); i++)
+    //Print flags
+    for(auto flagView : method.FlagsToStrs())
     {
-      std::cout << flagStrings[i];
-
-      if(i+1 != flagStrings.size())
-        std::cout << ", ";
+      std::string flag{flagView};
+      std::transform(flag.begin(), flag.end(), flag.begin(), ::tolower);
+      std::cout << flag << ' ';
     }
 
-    std::cout << "]";
+    //Print descriptor & name
+    auto desc = cf.ConstPool.LookupString(method.DescriptorIndex).Get();
+    auto errOrMethodDescriptor = ClassFile::DecodeMethodDescriptor(desc);
 
+    if(errOrMethodDescriptor.IsError())
+    {
+      std::cerr << errOrMethodDescriptor.GetError().What << '\n';
+      exit(-1);
+    }
+
+    auto [ret, paramList] = errOrMethodDescriptor.Get();
+
+    std::cout << ret << ' ';
+
+    std::cout << cf.ConstPool.LookupString(method.NameIndex).Get();
+
+    std::cout << "(";
+    for(auto i = 0u; i < paramList.size(); i++)
+    {
+      std::cout << paramList[i];
+
+      if(i != paramList.size()-1)
+        std::cout << ", ";
+    }
+    std::cout << ");";
+
+    //Print details
     if(!PrintDetails)
       continue;
 
@@ -218,22 +238,29 @@ void PrintFields(const ClassFile::ClassFile& cf)
   for(const auto& field : cf.Fields)
   {
     std::cout << "\n  ";
-    std::cout << cf.ConstPool.LookupString(field.NameIndex).Get();
-    std::cout << "(";
 
-    //                 same struct, same flags
-    auto flagStrings = field.FlagsToStrs();
-
-    for(auto i = 0u; i < flagStrings.size(); i++)
+    //Print flags
+    for(auto flagView : field.FlagsToStrs())
     {
-      std::cout << flagStrings[i];
-
-      if(i+1 != flagStrings.size())
-        std::cout << ", ";
+      std::string flag{flagView};
+      std::transform(flag.begin(), flag.end(), flag.begin(), ::tolower);
+      std::cout << flag << ' ';
     }
 
-    std::cout << "): ";
-    std::cout << cf.ConstPool.LookupString(field.DescriptorIndex).Get();
+    //Print FieldType
+    auto desc = cf.ConstPool.LookupString(field.DescriptorIndex).Get();
+    auto errOrFieldType = ClassFile::DecodeFieldDescriptor(desc);
+
+    if(errOrFieldType.IsError())
+    {
+      std::cerr << errOrFieldType.GetError().What << '\n';
+      exit(-1);
+    }
+
+    std::cout << errOrFieldType.Get() << ' ';
+
+    //Print Name
+    std::cout << cf.ConstPool.LookupString(field.NameIndex).Get() << ';';
   }
 
   std::cout << "\n";
