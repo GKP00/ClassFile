@@ -29,8 +29,12 @@ target_include_directories(ClassFile PUBLIC "include")
 
 target_link_libraries(ClassFile PRIVATE fmt)
 
-add_executable(readclass "example/readclass.cpp")
-target_link_libraries(readclass PUBLIC ClassFile)
+option(BUILD_EXAMPLES "build examples" OFF)
 
-add_executable(dupeclass "example/dupeclass.cpp")
-target_link_libraries(dupeclass PUBLIC ClassFile)
+if(BUILD_EXAMPLES)
+  add_executable(readclass "example/readclass.cpp")
+  target_link_libraries(readclass PUBLIC ClassFile)
+
+  add_executable(dupeclass "example/dupeclass.cpp")
+  target_link_libraries(dupeclass PUBLIC ClassFile)
+endif()
