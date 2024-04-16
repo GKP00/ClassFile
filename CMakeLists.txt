@@ -39,3 +39,8 @@ if(BUILD_EXAMPLES)
   add_executable(dupeclass "example/dupeclass.cpp")
   target_link_libraries(dupeclass PUBLIC ClassFile)
 endif()
+
+option(BUILD_TESTS "build tests" OFF)
+if(BUILD_TESTS)
+  add_subdirectory(test)
+endif()
