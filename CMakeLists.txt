@@ -31,13 +31,8 @@ target_include_directories(ClassFile PUBLIC "include")
 target_link_libraries(ClassFile PRIVATE fmt)
 
 option(BUILD_EXAMPLES "build examples" OFF)
-
 if(BUILD_EXAMPLES)
-  add_executable(readclass "example/readclass.cpp")
-  target_link_libraries(readclass PUBLIC ClassFile)
-
-  add_executable(dupeclass "example/dupeclass.cpp")
-  target_link_libraries(dupeclass PUBLIC ClassFile)
+  add_subdirectory(example)
 endif()
 
 option(BUILD_TESTS "build tests" OFF)
