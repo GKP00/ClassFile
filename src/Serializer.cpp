@@ -250,6 +250,16 @@ static ErrorOr<void> writeAttr(std::ostream& stream, const CodeAttribute& attr)
   return {};
 }
 
+static ErrorOr<void> writeAttr(std::ostream& stream, const ExceptionsAttribute& attr)
+{
+  TRY( Write<BigEndian>(stream, attr.ExceptionTable.size()) );
+
+  for(U16 exceptionIndex : attr.ExceptionTable)
+    TRY( Write<BigEndian>(stream, exceptionIndex) );
+
+  return {};
+}
+
 static ErrorOr<void> writeAttr(std::ostream& stream, const SourceFileAttribute& attr)
 {
   TRY( Write<BigEndian>(stream, attr.SourceFileIndex) );
@@ -283,6 +293,7 @@ ErrorOr<void> Serializer::SerializeAttribute(std::ostream& stream, const Attribu
   {
     case AttributeInfo::Type::ConstantValue: return writeAttrT<ConstantValueAttribute>(stream, info);
     case AttributeInfo::Type::Code:          return writeAttrT<CodeAttribute>(stream, info);
+    case AttributeInfo::Type::Exceptions:    return writeAttrT<ExceptionsAttribute>(stream, info);
     case AttributeInfo::Type::SourceFile:    return writeAttrT<SourceFileAttribute>(stream, info);
     case AttributeInfo::Type::LineNumberTable:    return writeAttrT<LineNumberTableAttribute>(stream, info);
 

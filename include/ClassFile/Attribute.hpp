@@ -20,7 +20,7 @@ struct AttributeInfo
       ConstantValue,
       Code,
       //StackMapTable,
-      //Exceptions,
+      Exceptions,
       //InnerClasses,
       //Synthetic,
       //Signature,
@@ -120,6 +120,18 @@ struct CodeAttribute : public AttributeInfo
     return len;
   }
 
+};
+
+struct ExceptionsAttribute : public AttributeInfo
+{
+  ExceptionsAttribute() : AttributeInfo(Type::Exceptions) {}
+  U32 GetLength() const override 
+  { 
+    return sizeof(U16) //number_of_exceptions field
+      + (ExceptionTable.size() * sizeof(U16));
+  }
+
+  std::vector<U16> ExceptionTable;
 };
 
 struct SourceFileAttribute : public AttributeInfo

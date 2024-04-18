@@ -343,6 +343,23 @@ static ErrorOr<void> readAttribute(std::istream& stream,
 }
 
 static ErrorOr<void> readAttribute(std::istream& stream, 
+    const ConstantPool& constPool, ExceptionsAttribute& attr)
+{
+  U16 nExceptions;
+  TRY(Read<BigEndian>(stream, nExceptions));
+
+  attr.ExceptionTable.reserve(nExceptions);
+  for(auto i = 0u; i < nExceptions; i++)
+  {
+    U16 exceptionIndex;
+    TRY(Read<BigEndian>(stream, exceptionIndex));
+    attr.ExceptionTable.push_back(exceptionIndex);
+  }
+
+  return {};
+}
+
+static ErrorOr<void> readAttribute(std::istream& stream, 
     const ConstantPool& constPool, SourceFileAttribute& attr)
 {
   TRY(Read<BigEndian>(stream, attr.SourceFileIndex));
@@ -415,6 +432,8 @@ ErrorOr< std::unique_ptr<AttributeInfo> > Parser::ParseAttribute(
       return parseAttributeT<ConstantValueAttribute>(stream, constPool, nameIndex, len);
     case AttributeInfo::Type::Code: 
       return parseAttributeT<CodeAttribute>(stream, constPool, nameIndex, len);
+    case AttributeInfo::Type::Exceptions: 
+      return parseAttributeT<ExceptionsAttribute>(stream, constPool, nameIndex, len);
     case AttributeInfo::Type::SourceFile: 
       return parseAttributeT<SourceFileAttribute>(stream, constPool, nameIndex, len);
     case AttributeInfo::Type::LineNumberTable: 
