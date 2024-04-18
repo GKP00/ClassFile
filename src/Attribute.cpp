@@ -9,17 +9,15 @@ namespace ClassFile
 {
 
 
-using namespace std::literals;
-
 static std::map<AttributeInfo::Type, std::string_view> typeNames =
 {
-  {AttributeInfo::Type::ConstantValue,   "ConstantValue"sv},
-  {AttributeInfo::Type::Code,            "Code"sv},
-  {AttributeInfo::Type::Exceptions,      "Exceptions"sv},
-  {AttributeInfo::Type::SourceFile,      "SourceFile"sv},
-  {AttributeInfo::Type::LineNumberTable, "LineNumberTable"sv},
+  {AttributeInfo::Type::ConstantValue,   "ConstantValue"},
+  {AttributeInfo::Type::Code,            "Code"},
+  {AttributeInfo::Type::Exceptions,      "Exceptions"},
+  {AttributeInfo::Type::SourceFile,      "SourceFile"},
+  {AttributeInfo::Type::LineNumberTable, "LineNumberTable"},
 
-  {AttributeInfo::Type::Raw, "_Raw"sv}
+  {AttributeInfo::Type::Raw, "_Raw"}
 };
 
 std::string_view AttributeInfo::GetTypeName(AttributeInfo::Type type) 
