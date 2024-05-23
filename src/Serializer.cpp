@@ -328,7 +328,7 @@ ErrorOr<void> Serializer::SerializeInstruction(std::ostream& stream, const Instr
   {
     switch( instr.GetOperandType(i) )
     {
-      using type = Instruction::OperandType;
+      using type = OperandType;
       case type::TypeS32: TRY( writeOperand<S32>(stream, instr, i) ); break;
       case type::TypeS16: TRY( writeOperand<S16>(stream, instr, i) ); break;
       case type::TypeS8 : TRY( writeOperand<S8 >(stream, instr, i) ); break;

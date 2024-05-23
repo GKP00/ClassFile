@@ -473,7 +473,7 @@ static ErrorOr<void> readOperand(std::istream& stream, Instruction& instr, size_
 
 ErrorOr<Instruction> Parser::ParseInstruction(std::istream& stream)
 {
-  Instruction::Opcode op;
+  OpCode op;
   TRY(Read<BigEndian>(stream, (U8&)op));
 
   Instruction instr = Instruction::MakeInstruction(op).Get();
@@ -489,7 +489,7 @@ ErrorOr<Instruction> Parser::ParseInstruction(std::istream& stream)
   {
     switch( instr.GetOperandType(i) )
     {
-      using Type = Instruction::OperandType;
+      using Type = OperandType;
       case Type::TypeS32: TRY(readOperand<S32>(stream, instr, i)) break;
       case Type::TypeS16: TRY(readOperand<S16>(stream, instr, i)) break;
       case Type::TypeS8 : TRY(readOperand<S8 >(stream, instr, i)) break;

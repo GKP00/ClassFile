@@ -33,11 +33,11 @@ void PrintConstInfo(size_t i, const ClassFile::ConstantPool& cp)
   std::cout << '\n';
 }
 
-std::string_view GetOperandTypeName(ClassFile::Instruction::OperandType type)
+std::string_view GetOperandTypeName(ClassFile::OperandType type)
 {
   switch(type)
   {
-    using Type = ClassFile::Instruction::OperandType;
+    using Type = ClassFile::OperandType;
     case Type::TypeU8:  return "U8";
     case Type::TypeU16: return "U16";
     case Type::TypeS8:  return "S8";

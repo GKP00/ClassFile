@@ -23,6 +23,7 @@ add_library(ClassFile "src/Parser.cpp"
                       "src/ConstantPool.cpp" 
                       "src/ClassFile.cpp" 
                       "src/Attribute.cpp"
+                      "src/OpCodes.cpp"
                       "src/Misc.cpp")
 
 target_include_directories(ClassFile PRIVATE "src")
