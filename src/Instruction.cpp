@@ -1,4 +1,3 @@
-#define _DONT_UNDEF_ITERATE_OpcodeS
 #include "ClassFile/Instruction.hpp"
 
 #include <fmt/core.h>
