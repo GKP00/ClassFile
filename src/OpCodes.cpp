@@ -215,6 +215,27 @@ constexpr std::array<opInfo, ClassFile::OpCode::_N> infoTable =
   {"breakpoint",     ""},
  }};
 
+std::string_view ClassFile::ToString(OperandType opType)
+{
+  switch(opType)
+  {
+    case TypeS32: return "S32";
+    case TypeS16: return "S16";
+    case TypeS8:  return  "S8";
+    case TypeU16: return "U16";
+    case TypeU8:  return  "U8";
+  }
+
+  assert(false);
+  return {};
+}
+
+std::ostream& ClassFile::operator<<(std::ostream& s, OperandType type)
+{
+  s << ToString(type);
+  return s;
+}
+
 static constexpr std::string_view mnemonic(OpCode op)
 {
   assert(static_cast<int>(op) < OpCode::_N);

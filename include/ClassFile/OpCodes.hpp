@@ -224,6 +224,9 @@ enum OperandType
   TypeU8  = 'b',
 };
 
+std::string_view ToString(OperandType);
+std::ostream& operator<<(std::ostream& s, OperandType type);
+
 std::string_view GetMnemonic(OpCode);
 size_t GetNOperands(OpCode);
 OperandType GetOperandType(OpCode, size_t index);

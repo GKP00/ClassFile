@@ -33,21 +33,6 @@ void PrintConstInfo(size_t i, const ClassFile::ConstantPool& cp)
   std::cout << '\n';
 }
 
-std::string_view GetOperandTypeName(ClassFile::OperandType type)
-{
-  switch(type)
-  {
-    using Type = ClassFile::OperandType;
-    case Type::TypeU8:  return "U8";
-    case Type::TypeU16: return "U16";
-    case Type::TypeS8:  return "S8";
-    case Type::TypeS16: return "S16";
-    case Type::TypeS32: return "S32";
-  }
-
-  return "UNKNOWN_TYPE";
-}
-
 void PrintInstrInfo(const ClassFile::Instruction& instr)
 {
   std::cout << instr.GetMnemonic() << " (0x";
@@ -60,7 +45,7 @@ void PrintInstrInfo(const ClassFile::Instruction& instr)
 
   for(size_t i = 0; i < instr.GetNOperands(); i++)
   {
-    std::cout << GetOperandTypeName(instr.GetOperandType(i));
+    std::cout << instr.GetOperandType(i);
     std::cout << "{";
     std::cout <<  instr.GetOperand(i).Get();
     std::cout << "}";
