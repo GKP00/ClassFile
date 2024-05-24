@@ -273,18 +273,18 @@ OperandType ClassFile::GetOperandType(OpCode op, size_t index)
 
 size_t ClassFile::GetOperandSize(OpCode op, size_t index) 
 {
-  size_t size;
 
   switch( GetOperandType(op, index) )
   {
-    case 'I': size = sizeof(S32); break;
-    case 'S': size = sizeof(S16); break;
-    case 'B': size = sizeof(S8);  break;
-    case 's': size = sizeof(U16); break;
-    case 'b': size = sizeof(U8);  break;
+    case 'I': return sizeof(S32); 
+    case 'S': return sizeof(S16);
+    case 'B': return sizeof(S8);
+    case 's': return sizeof(U16);
+    case 'b': return sizeof(U8);
   }
 
-  return size;
+  assert(false);
+  return {};
 }
 
 size_t ClassFile::GetLength(OpCode op)
@@ -295,16 +295,7 @@ size_t ClassFile::GetLength(OpCode op)
   size_t len{1};
 
   for(size_t i{0}; i < GetNOperands(op); ++i)
-  {
-    switch( GetOperandType(op, i) )
-    {
-      case 'I': len+=sizeof(S32); break;
-      case 'S': len+=sizeof(S16); break;
-      case 'B': len+=sizeof(S8);  break;
-      case 's': len+=sizeof(U16); break;
-      case 'b': len+=sizeof(U8);  break;
-    }
-  }
+    len += GetOperandSize(op, i);
 
   return len;
 }
