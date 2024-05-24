@@ -10,7 +10,7 @@ using namespace ClassFile;
 ErrorOr<Instruction> Instruction::MakeInstruction(OpCode op)
 {
   Instruction instr;
-  instr.Op = op;
+  instr.op = op;
 
   size_t totalOperandSize{0};
   for(size_t i{0}; i < ::GetNOperands(op); ++i)
@@ -21,34 +21,39 @@ ErrorOr<Instruction> Instruction::MakeInstruction(OpCode op)
   return instr;
 }
 
+OpCode Instruction::GetOpCode() const
+{
+  return this->op;
+}
+
 std::string_view Instruction::GetMnemonic() const
 {
-  return ::GetMnemonic(this->Op);
+  return ::GetMnemonic(this->op);
 }
 
 size_t Instruction::GetNOperands() const
 { 
-  return ::GetNOperands(this->Op); 
+  return ::GetNOperands(this->op); 
 }
 
 OperandType Instruction::GetOperandType(size_t index) const
 {
-  return ::GetOperandType(this->Op, index);
+  return ::GetOperandType(this->op, index);
 }
 
 size_t Instruction::GetOperandSize(size_t index) const
 {
-  return ::GetOperandSize(this->Op, index);
+  return ::GetOperandSize(this->op, index);
 }
 
 size_t Instruction::GetLength() const
 {
-  return ::GetLength(this->Op);
+  return ::GetLength(this->op);
 }
 
 bool Instruction::IsComplex() const
 {
-  return ::IsComplex(this->Op);
+  return ::IsComplex(this->op);
 }
 
 template <typename T>

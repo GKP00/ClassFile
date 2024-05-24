@@ -36,7 +36,7 @@ void PrintConstInfo(size_t i, const ClassFile::ConstantPool& cp)
 void PrintInstrInfo(const ClassFile::Instruction& instr)
 {
   std::cout << instr.GetMnemonic() << " (0x";
-  std::cout << std::hex << (int)instr.Op << std::dec << ")";
+  std::cout << std::hex << (int)instr.GetOpCode() << std::dec << ")";
 
   if(instr.GetNOperands() > 0)
     std::cout << ": Opreands[";

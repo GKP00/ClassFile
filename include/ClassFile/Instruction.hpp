@@ -14,10 +14,9 @@ namespace ClassFile
 class Instruction
 {
   public:
-  OpCode Op;
-
   static ErrorOr<Instruction> MakeInstruction(OpCode);
 
+  OpCode GetOpCode() const;
   std::string_view GetMnemonic() const;
   size_t GetNOperands() const;
   OperandType GetOperandType(size_t index) const;
@@ -53,6 +52,7 @@ class Instruction
   ErrorOr<void> SetOperand(size_t index, S32 value);
 
   private:
+  OpCode op;
   std::vector<U8> operandBytes;
 
   Instruction() = default;
