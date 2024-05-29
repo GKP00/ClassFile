@@ -229,9 +229,16 @@ std::ostream& operator<<(std::ostream& s, OperandType type);
 
 std::string_view GetMnemonic(OpCode);
 size_t GetNOperands(OpCode);
+size_t GetOperandSize(OperandType);
+
 OperandType GetOperandType(OpCode, size_t index);
 size_t GetOperandSize(OpCode, size_t index);
 size_t GetLength(OpCode);
+
+OperandType GetWideOperandType(OpCode, size_t index);
+size_t GetWideOperandSize(OpCode, size_t index);
+size_t GetWideLength(OpCode);
+
 bool IsComplex(OpCode);
 
 } //namespace ClassFile
