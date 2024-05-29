@@ -474,9 +474,20 @@ static ErrorOr<void> readOperand(std::istream& stream, Instruction& instr, size_
 ErrorOr<Instruction> Parser::ParseInstruction(std::istream& stream)
 {
   OpCode op;
+  bool wide = false;
+
   TRY(Read<BigEndian>(stream, (U8&)op));
 
-  Instruction instr = Instruction::MakeInstruction(op).Get();
+  if(op == OpCode::WIDE)
+  {
+    wide = true;
+    TRY(Read<BigEndian>(stream, (U8&)op));
+  }
+
+  auto errOrInstr = Instruction::MakeInstruction(op, wide);
+  VERIFY(errOrInstr);
+
+  Instruction instr = errOrInstr.Get();
 
   if(instr.IsComplex())
   {

@@ -7,14 +7,21 @@
 
 using namespace ClassFile;
 
-ErrorOr<Instruction> Instruction::MakeInstruction(OpCode op)
+ErrorOr<Instruction> Instruction::MakeInstruction(OpCode op, bool wide)
 {
+  if(op == OpCode::WIDE)
+    return Error{"Instruction::MakeInstruction(): invalid opcode WIDE"};
+
   Instruction instr;
-  instr.op = op;
+  instr.op   = op;
+  instr.wide = wide;
 
   size_t totalOperandSize{0};
   for(size_t i{0}; i < ::GetNOperands(op); ++i)
-    totalOperandSize += ::GetOperandSize(op, i);
+  {
+    totalOperandSize += wide ? ::GetWideOperandSize(op, i) 
+                             : ::GetOperandSize(op, i);
+  }
 
   instr.operandBytes.resize(totalOperandSize);
 
@@ -26,9 +33,10 @@ OpCode Instruction::GetOpCode() const
   return this->op;
 }
 
-std::string_view Instruction::GetMnemonic() const
+std::string Instruction::GetMnemonic() const
 {
-  return ::GetMnemonic(this->op);
+  std::string mnemonic{::GetMnemonic(this->op)};
+  return this->wide ? std::string{mnemonic + "_w"} : mnemonic;
 }
 
 size_t Instruction::GetNOperands() const
@@ -38,22 +46,30 @@ size_t Instruction::GetNOperands() const
 
 OperandType Instruction::GetOperandType(size_t index) const
 {
-  return ::GetOperandType(this->op, index);
+  return this->wide ? ::GetWideOperandType(this->op, index) 
+                    : ::GetOperandType(this->op, index);
 }
 
 size_t Instruction::GetOperandSize(size_t index) const
 {
-  return ::GetOperandSize(this->op, index);
+  return this->wide ? ::GetWideOperandSize(this->op, index)
+                    : ::GetOperandSize(this->op, index);
 }
 
 size_t Instruction::GetLength() const
 {
-  return ::GetLength(this->op);
+  return this->wide ? ::GetWideLength(this->op)
+                    : ::GetLength(this->op);
 }
 
 bool Instruction::IsComplex() const
 {
   return ::IsComplex(this->op);
+}
+
+bool Instruction::IsWide() const
+{
+  return this->wide;
 }
 
 template <typename T>

@@ -322,6 +322,9 @@ ErrorOr<void> Serializer::SerializeInstruction(std::ostream& stream, const Instr
     return Error{ fmt::format("Serializer::SerializeInstruction(): \"{}\" is a "
         "complex instruciton which serialization is not yet implemented for.", instr.GetMnemonic()) };
 
+  if(instr.IsWide())
+    TRY(Write<BigEndian>(stream, OpCode::WIDE));
+
   TRY(Write<BigEndian>(stream, instr.GetOpCode()));
 
   for(size_t i{0}; i < instr.GetNOperands(); ++i)

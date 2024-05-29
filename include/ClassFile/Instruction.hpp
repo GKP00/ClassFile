@@ -14,15 +14,16 @@ namespace ClassFile
 class Instruction
 {
   public:
-  static ErrorOr<Instruction> MakeInstruction(OpCode);
+  static ErrorOr<Instruction> MakeInstruction(OpCode, bool wide=false);
 
   OpCode GetOpCode() const;
-  std::string_view GetMnemonic() const;
+  std::string GetMnemonic() const;
   size_t GetNOperands() const;
   OperandType GetOperandType(size_t index) const;
   size_t GetOperandSize(size_t index) const;
   size_t GetLength() const;
   bool IsComplex() const;
+  bool IsWide() const;
 
   template <typename T>
   ErrorOr< std::reference_wrapper<T> > Operand(size_t index)
@@ -53,6 +54,7 @@ class Instruction
 
   private:
   OpCode op;
+  bool wide;
   std::vector<U8> operandBytes;
 
   Instruction() = default;
