@@ -20,6 +20,9 @@ class FileParseTest : public ::testing::Test
     ClassFile::ErrorOr<ClassFile::ClassFile> errOrComplexClass{
       ClassFile::Error{"ErrOr uninitialized in test"}};
 
+    ClassFile::ErrorOr<ClassFile::ClassFile> errOrWideClass{
+      ClassFile::Error{"ErrOr uninitialized in test"}};
+
     void SetUp() override
     {
       try
@@ -32,6 +35,11 @@ class FileParseTest : public ::testing::Test
 
         is.open(RES_DIR"/Complex.class");
         errOrComplexClass = std::move(ClassFile::Parser::ParseClassFile(is));
+        is.close();
+
+        is.open(RES_DIR"/Wide.class");
+        errOrWideClass = std::move(ClassFile::Parser::ParseClassFile(is));
+        is.close();
       }
       catch(std::exception& e)
       {
@@ -41,6 +49,13 @@ class FileParseTest : public ::testing::Test
     }
 
 };
+
+TEST_F(FileParseTest, SuccessfulParseWideInstr)
+{
+  ASSERT_TRUE( !errOrWideClass.IsError() )
+    << "Parsing failed for class with wide instr, error:\n" 
+    << errOrSimpleClass.GetError().What;
+}
 
 TEST_F(FileParseTest, SuccessfulParseSimple)
 {
