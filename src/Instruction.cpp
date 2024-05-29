@@ -67,16 +67,18 @@ static ErrorOr<S32> verifyGetOpr(size_t index, const Instruction* instr)
 
 ErrorOr<S32> Instruction::GetOperand(size_t index) const
 {
-  switch( this->GetOperandType(index) )
+  OperandType type = this->GetOperandType(index);
+  switch( type )
   {
     case 'I': return verifyGetOpr<S32>(index, this);
     case 'S': return verifyGetOpr<S16>(index, this);
     case 'B': return verifyGetOpr<S8 >(index, this);
     case 's': return verifyGetOpr<U16>(index, this);
     case 'b': return verifyGetOpr<U8 >(index, this);
-
-    default: assert(false);
   }
+
+  return Error{ fmt::format("Instruciton::GetOperand(): unknown operand type "
+      "{}\".", ToString(type)) };
 }
 
 template <typename T>
@@ -93,16 +95,18 @@ static ErrorOr<void> verifySetOpr(size_t index, S32 value, Instruction* instr)
 
 ErrorOr<void> Instruction::SetOperand(size_t index, S32 value) 
 {
-  switch( this->GetOperandType(index) )
+  OperandType type = this->GetOperandType(index);
+  switch( type )
   {
     case 'I': return verifySetOpr<S32>(index, value, this);
     case 'S': return verifySetOpr<S16>(index, value, this);
     case 'B': return verifySetOpr<S8 >(index, value, this);
     case 's': return verifySetOpr<U16>(index, value, this);
     case 'b': return verifySetOpr<U8 >(index, value, this);
-
-    default: assert(false);
   }
+
+  return Error{ fmt::format("Instruciton::SetOperand(): unknown operand type "
+      "{}\".", ToString(type)) };
 }
 
 Error Instruction::oobError(size_t index) const
