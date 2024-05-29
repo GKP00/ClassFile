@@ -150,9 +150,6 @@ void PrintMethods(const ClassFile::ClassFile& cf)
     }
     std::cout << ");";
 
-    //Print details
-    if(!PrintDetails)
-      continue;
 
     auto codeItr = std::find_if(method.Attributes.begin(), method.Attributes.end(), 
         [](const auto& pAttr) { return pAttr->GetType() == ClassFile::AttributeInfo::Type::Code;});
@@ -162,53 +159,61 @@ void PrintMethods(const ClassFile::ClassFile& cf)
       codeItr == method.Attributes.end() ? nullptr : 
       static_cast<const ClassFile::CodeAttribute*>((*codeItr).get());
 
-
-    if(pCodeAttr)
+    if(!pCodeAttr)
     {
-      std::cout << " :\n";
+      std::cerr << "METHOD DOESNT HAVE CODE ATTRIBUTE\n";
+      continue;
+    }
 
-      for(const auto& instr : pCodeAttr->Code)
-      {
-        std::cout << "   ";
-        PrintInstrInfo(instr);
-      }
+    std::cout << " codelen=" << pCodeAttr->Code.size() 
+      << " (" << pCodeAttr->GetLength() << " bytes)";
 
-      //print exception table
-      if(pCodeAttr->ExceptionTable.size() > 0)
-        std::cout<< "  Exception table:\n";
+    //Print details
+    if(!PrintDetails)
+      continue;
 
-      for(const auto& itr : pCodeAttr->ExceptionTable)
-      {
-        std::cout << "   " 
-          << "StartPC{" << itr.StartPC << "}, "
-          << "EndPC{" << itr.EndPC << "}, "
-          << "HandlerPC{" << itr.HandlerPC<< "}, "
-          << "CatchType{";
+    std::cout << " :\n";
 
-        if(itr.CatchType)
-          std::cout << cf.ConstPool.LookupString(itr.CatchType).Get();
-        else
-          std::cout << itr.CatchType;
-          
-        std::cout << "}\n";
-      }
+    for(const auto& instr : pCodeAttr->Code)
+    {
+      std::cout << "   ";
+      PrintInstrInfo(instr);
+    }
+
+    //print exception table
+    if(pCodeAttr->ExceptionTable.size() > 0)
+      std::cout<< "  Exception table:\n";
+
+    for(const auto& itr : pCodeAttr->ExceptionTable)
+    {
+      std::cout << "   " 
+        << "StartPC{" << itr.StartPC << "}, "
+        << "EndPC{" << itr.EndPC << "}, "
+        << "HandlerPC{" << itr.HandlerPC<< "}, "
+        << "CatchType{";
+
+      if(itr.CatchType)
+        std::cout << cf.ConstPool.LookupString(itr.CatchType).Get();
+      else
+        std::cout << itr.CatchType;
+
+      std::cout << "}\n";
+    }
 
 
-      //check if a line number table attribute exists in the code attribute
-      auto lineTableItr = std::find_if(pCodeAttr->Attributes.begin(), pCodeAttr->Attributes.end(), 
-          [](const auto& pAttr) { return pAttr->GetType() == ClassFile::AttributeInfo::Type::LineNumberTable;});
+    //check if a line number table attribute exists in the code attribute
+    auto lineTableItr = std::find_if(pCodeAttr->Attributes.begin(), pCodeAttr->Attributes.end(), 
+        [](const auto& pAttr) { return pAttr->GetType() == ClassFile::AttributeInfo::Type::LineNumberTable;});
 
-      const auto* pLineTableAttr = 
-        lineTableItr == pCodeAttr->Attributes.end() ? nullptr :
-        static_cast<const ClassFile::LineNumberTableAttribute*>((*lineTableItr).get());
+    const auto* pLineTableAttr = 
+      lineTableItr == pCodeAttr->Attributes.end() ? nullptr :
+      static_cast<const ClassFile::LineNumberTableAttribute*>((*lineTableItr).get());
 
-      if(pLineTableAttr)
-      {
-        std::cout << "  Line number table:\n";
-        for(auto mapping : pLineTableAttr->LineNumberMap)
-          std::cout << "    PC{" << mapping.PC << "}, Line{" << mapping.LineNumber << "}\n";
-      }
-
+    if(pLineTableAttr)
+    {
+      std::cout << "  Line number table:\n";
+      for(auto mapping : pLineTableAttr->LineNumberMap)
+        std::cout << "    PC{" << mapping.PC << "}, Line{" << mapping.LineNumber << "}\n";
     }
 
     std::cout << "\n";
