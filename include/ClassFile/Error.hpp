@@ -48,7 +48,23 @@ class ErrorOr
     {
       return std::move(std::get<ValueT>(m_errorOrValue));
     }
-  
+
+    ValueT GetOrElse(ValueT elseValue)
+    {
+      if(this->IsError())
+        return elseValue;
+
+      return this->Get();
+    }
+
+    ValueT ReleaseOrElse(ValueT elseValue)
+    {
+      if(this->IsError())
+        return elseValue;
+
+      return std::move(this->Release());
+    }
+
   private:
     std::variant<ErrorT, ValueT> m_errorOrValue;
 
