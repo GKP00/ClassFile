@@ -54,7 +54,7 @@ TEST_F(FileParseTest, SuccessfulParseWideInstr)
 {
   ASSERT_TRUE( !errOrWideClass.IsError() )
     << "Parsing failed for class with wide instr, error:\n" 
-    << errOrSimpleClass.GetError().What;
+    << errOrWideClass.GetError().What;
 
   ClassFile::ClassFile cf = errOrWideClass.Release();
 
