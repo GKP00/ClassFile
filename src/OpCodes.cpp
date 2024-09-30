@@ -4,7 +4,8 @@
 #include <tuple>
 #include <cassert>
 
-using namespace ClassFile;
+namespace ClassFile
+{
 
 struct opInfo
 {
@@ -18,7 +19,7 @@ struct opInfo
     : Mnemonic{mnemonic}, OperandFormat{fmt}, WideOperandFormat{wFmt} {}
 };
 
-constexpr std::array<opInfo, ClassFile::OpCode::_N> infoTable = 
+constexpr std::array<opInfo, OpCode::_N> infoTable = 
 {{
   {"nop"},
   {"aconst_null"},
@@ -138,7 +139,7 @@ constexpr std::array<opInfo, ClassFile::OpCode::_N> infoTable =
   {"monitorenter"},
   {"monitorexit"},
 
-  {"wide", ""}, 
+  {"wide", "c"}, 
 
   {"multianewarray", "sb"},
   {"ifnull",    "s"},
@@ -148,7 +149,7 @@ constexpr std::array<opInfo, ClassFile::OpCode::_N> infoTable =
   {"breakpoint"},
  }};
 
-std::string_view ClassFile::ToString(OperandType opType)
+std::string_view ToString(OperandType opType)
 {
   switch(opType)
   {
@@ -163,7 +164,7 @@ std::string_view ClassFile::ToString(OperandType opType)
   return {};
 }
 
-std::ostream& ClassFile::operator<<(std::ostream& s, OperandType type)
+std::ostream& operator<<(std::ostream& s, OperandType type)
 {
   s << ToString(type);
   return s;
@@ -201,29 +202,39 @@ static constexpr std::string_view wideformat(OpCode op)
   return infoTable[op].WideOperandFormat;
 }
 
+ErrorOr<OpCode> GetOpCode(std::string_view mnemonic)
+{
+  for(U8 i = 0u; i < OpCode::_N; ++i)
+  {
+    if(infoTable[i].Mnemonic == mnemonic)
+      return OpCode{i};
+  }
 
-std::string_view ClassFile::GetMnemonic(OpCode op)
+  return Error{"unknown mnemonic"};
+}
+
+std::string_view GetMnemonic(OpCode op)
 {
   return mnemonic(op);
 }
 
-size_t ClassFile::GetNOperands(OpCode op)
+size_t GetNOperands(OpCode op)
 {
   return format(op).size();
 }
 
-OperandType ClassFile::GetOperandType(OpCode op, size_t index) 
+OperandType GetOperandType(OpCode op, size_t index) 
 {
   assertValidFormatIndex(wideformat(op), index);
   return static_cast<OperandType>(format(op)[index]);
 }
 
-size_t ClassFile::GetOperandSize(OpCode op, size_t index) 
+size_t GetOperandSize(OpCode op, size_t index) 
 {
   return GetOperandSize(GetOperandType(op, index));
 }
 
-size_t ClassFile::GetOperandSize(OperandType type)
+size_t GetOperandSize(OperandType type)
 {
   switch( type )
   {
@@ -238,7 +249,7 @@ size_t ClassFile::GetOperandSize(OperandType type)
   return {};
 }
 
-size_t ClassFile::GetLength(OpCode op)
+size_t GetLength(OpCode op)
 {
   assert(!IsComplex(op));
 
@@ -251,18 +262,18 @@ size_t ClassFile::GetLength(OpCode op)
   return len;
 }
 
-OperandType ClassFile::GetWideOperandType(OpCode op, size_t index) 
+OperandType GetWideOperandType(OpCode op, size_t index) 
 {
   assertValidFormatIndex(wideformat(op), index);
   return static_cast<OperandType>(wideformat(op)[index]);
 }
 
-size_t ClassFile::GetWideOperandSize(OpCode op, size_t index) 
+size_t GetWideOperandSize(OpCode op, size_t index) 
 {
   return GetOperandSize( GetWideOperandType(op, index) );
 }
 
-size_t ClassFile::GetWideLength(OpCode op)
+size_t GetWideLength(OpCode op)
 {
   assert(!IsComplex(op));
 
@@ -275,9 +286,9 @@ size_t ClassFile::GetWideLength(OpCode op)
   return len;
 }
 
-bool ClassFile::IsComplex(OpCode op) 
+bool IsComplex(OpCode op) 
 {
   return format(op)[0] == 'c';
 }
 
-
+} //namespace ClassFile

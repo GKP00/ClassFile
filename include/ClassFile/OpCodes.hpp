@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Defs.hpp"
+#include "Error.hpp"
 
 #include <string_view>
 
@@ -226,6 +227,8 @@ enum OperandType
 
 std::string_view ToString(OperandType);
 std::ostream& operator<<(std::ostream& s, OperandType type);
+
+ErrorOr<OpCode> GetOpCode(std::string_view mnemonic);
 
 std::string_view GetMnemonic(OpCode);
 size_t GetNOperands(OpCode);
