@@ -225,7 +225,7 @@ size_t GetNOperands(OpCode op)
 
 OperandType GetOperandType(OpCode op, size_t index) 
 {
-  assertValidFormatIndex(wideformat(op), index);
+  assertValidFormatIndex(format(op), index);
   return static_cast<OperandType>(format(op)[index]);
 }
 
